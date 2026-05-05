@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Too Good To Go UIUC — IS Senior Project Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Nunito:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --gd:#0B1F3A;--gp:#13294B;--gm:#1D4F91;--gl:#4B82C3;--gpa:#B8D4F4;--gmt:#E8F1FC;
+  --gr:#2EC14D;--grl:#D6F7D7;
+  --cr:#F8FAFC;--bg:#EEF3F8;--or:#FF5F05;--orl:#FF8F3D;--orp:#FFF0E8;
+  --rd:#C1121F;--dk:#07172A;--tp:#07172A;--ts:#435A73;--tm:#7890AA;
+  --wh:#FFFFFF;--sh:0 2px 12px rgba(19,41,75,0.14);--bd:rgba(19,41,75,0.16);
+  --fd:'Syne',sans-serif;--fb:'Nunito',sans-serif;
+}
+body{font-family:var(--fb);background:linear-gradient(150deg,#07172A 0%,#13294B 42%,#FF5F05 115%);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 16px 60px;}
+/* HEADER */
+.ph{text-align:center;margin-bottom:18px;}
+.ph h1{font-family:Calibri, sans-serif;font-size:17px;font-weight:bold;color:var(--cr);letter-spacing:0.3px;display:inline-flex;align-items:center;gap:8px;}
+.site-logo{width:34px;height:37px;object-fit:contain;display:block;}
+.ph p{font-size:11px;color:rgba(254,250,224,0.65);margin-top:3px;}
+.uiuc-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:3px 10px;margin-top:6px;color:rgba(255,255,255,0.8);font-size:10px;font-weight:700;letter-spacing:0.5px;}
+/* TABS */
+.tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:nowrap;justify-content:center;max-width:1180px;width:100%;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.65);border-radius:20px;padding:6px 14px;font-size:11.5px;font-family:var(--fb);cursor:pointer;transition:all .2s;font-weight:600;white-space:nowrap;flex:0 0 auto;}
+.tab:hover{background:rgba(255,255,255,0.18);color:white;}
+.tab.act{background:var(--or);color:white;border-color:var(--or);font-weight:800;}
+.tab small{display:block;font-size:9px;opacity:.65;text-transform:uppercase;letter-spacing:.5px;margin-top:1px;}
+/* WRAPPER */
+.wrap{display:flex;gap:20px;align-items:flex-start;max-width:800px;width:100%;}
+/* PHONE */
+.pf{width:390px;min-width:390px;height:848px;background:#111;border-radius:52px;padding:12px;box-shadow:0 0 0 1px rgba(255,255,255,0.08),0 24px 80px rgba(0,0,0,0.6),inset 0 0 0 1.5px #2A2A2A;position:relative;}
+.pf::before{content:'';position:absolute;top:12px;left:50%;transform:translateX(-50%);width:126px;height:36px;background:#111;border-radius:0 0 22px 22px;z-index:100;}
+.ps{width:100%;height:100%;border-radius:40px;overflow:hidden;background:var(--cr);position:relative;}
+/* SCREENS */
+.scr{display:none;width:100%;height:100%;flex-direction:column;background:var(--cr);overflow:hidden;position:relative;}
+.scr.act{display:flex;}
+.scrl{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.scrl::-webkit-scrollbar{display:none;}
+/* STATUS BAR */
+.sb{height:46px;background:var(--gp);display:flex;align-items:center;justify-content:space-between;padding:0 24px;padding-top:18px;color:white;font-size:11.5px;font-weight:700;flex-shrink:0;}
+.sbi{display:flex;gap:5px;align-items:center;font-size:13px;}
+/* APP HEADER */
+.ah{background:linear-gradient(135deg,var(--gp) 0%,#243554 58%,#6F3A2A 86%,var(--or) 145%);padding:8px 18px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.al{width:34px;height:34px;background:var(--cr);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:5px;}
+.app-logo{width:100%;height:100%;object-fit:contain;display:block;}
+.an{flex:1;color:white;font-family:Calibri, sans-serif;font-weight:bold;font-size:15px;line-height:1.1;}
+.an small{font-size:10px;font-weight:400;opacity:.75;font-family:var(--fb);}
+.asub{background:linear-gradient(180deg,#6F3A2A 0%,#C75012 55%,var(--or) 100%);padding:0 18px 8px 62px;color:rgba(255,255,255,.92);font-family:Calibri, sans-serif;font-size:11px;font-weight:700;line-height:1;}
+.hi{width:36px;height:36px;background:rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:16px;cursor:pointer;position:relative;flex-shrink:0;}
+.nd{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--or);border-radius:50%;border:1.5px solid var(--gp);}
+/* SEARCH */
+.sr{background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;gap:8px;padding:10px 14px;margin:0 18px 0;color:rgba(255,255,255,.75);font-size:13px;border:1px solid rgba(255,255,255,0.2);}
+#scr1 .sb,#scr1 .ah,#scr1 .asub,#scr1 .home-search-band{background-image:linear-gradient(160deg,var(--gp) 0%,#6F3A2A 62%,var(--or) 115%);background-repeat:no-repeat;background-size:100% 210px;}
+#scr1 .sb{background-position:0 0;}
+#scr1 .ah{background-position:0 -46px;}
+#scr1 .asub{background-position:0 -104px;}
+#scr1 .home-search-band{background-position:0 -123px;}
+/* CONTENT */
+.ca{padding:14px 14px 80px;}
+/* TOGGLE */
+.tr{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.vt{background:white;border-radius:10px;padding:4px;display:flex;box-shadow:0 1px 5px rgba(0,0,0,0.1);}
+.tb{padding:6px 16px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--tm);font-family:var(--fb);transition:all .2s;}
+.tb.act{background:var(--or);color:white;}
+.slb{font-family:Calibri, sans-serif;font-weight:800;font-size:15px;color:var(--tp);margin-left:auto;}
+/* FILTER CHIPS */
+.fc{display:flex;gap:7px;overflow-x:auto;padding:0 0 10px;margin-bottom:4px;scrollbar-width:none;}
+.fc::-webkit-scrollbar{display:none;}
+.ch{background:white;border:1.5px solid var(--bd);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:var(--ts);white-space:nowrap;cursor:pointer;transition:all .2s;font-family:var(--fb);}
+.ch.act{background:var(--or);border-color:var(--or);color:white;}
+/* OFFER CARDS */
+.oc{background:white;border-radius:16px;overflow:hidden;margin-bottom:10px;box-shadow:var(--sh);cursor:pointer;transition:transform .15s,box-shadow .15s;}
+.oc:active{transform:scale(.98);}
+.ci{height:88px;display:flex;align-items:center;justify-content:center;font-size:34px;position:relative;}
+.ci.gr{background:linear-gradient(135deg,#E8F1FC,#B8D4F4);}
+.ci.or{background:linear-gradient(135deg,#FFF0E8,#FFD3B8);}
+.ci.tl{background:linear-gradient(135deg,#E8F1FC,#C8DCF5);}
+.ci.wm{background:linear-gradient(135deg,#FFF7F0,#FFE2CC);}
+.ob{position:absolute;top:8px;left:8px;padding:3px 9px;border-radius:20px;font-size:9px;font-weight:bold;text-transform:uppercase;letter-spacing:.6px;font-family:Arial, sans-serif;}
+.bf{background:var(--gm);color:white;}
+.bd{background:var(--or);color:white;}
+.tb2{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.6);color:white;padding:3px 8px;border-radius:7px;font-size:10.5px;font-weight:800;display:flex;align-items:center;gap:3px;}
+.map-price{font-family:Arial, sans-serif;font-weight:bold;}
+.campus-map{height:340px;background-image:linear-gradient(rgba(248,250,252,.04),rgba(248,250,252,.04)),url("assets/map-background.png");background-size:cover;background-position:center;border-radius:16px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--ts);font-weight:700;}
+.cb{padding:10px 13px 12px;}
+.cv{font-size:10px;color:var(--tm);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;}
+.ct{font-family:Calibri, sans-serif;font-weight:800;font-size:13.5px;color:var(--tp);margin-bottom:5px;}
+.cm{display:flex;gap:10px;font-size:11.5px;color:var(--ts);}
+.cf{display:flex;align-items:center;justify-content:space-between;margin-top:7px;padding-top:7px;border-top:1px solid var(--bd);}
+.cp{font-family:Arial, sans-serif;font-weight:bold;font-size:15px;color:var(--or);}
+.cq{font-size:11px;color:var(--tm);font-weight:700;}
+.qdot{display:inline-block;width:5px;height:5px;background:var(--or);border-radius:50%;margin-right:4px;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+/* BOTTOM NAV */
+.bn{height:70px;background:white;border-top:1px solid var(--bd);display:flex;align-items:center;flex-shrink:0;padding:0 8px 8px;}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9.5px;font-weight:700;color:var(--tm);cursor:pointer;padding:6px 0;border-radius:10px;}
+.ni.act{color:var(--or);}
+.ni.act .nico{background:var(--orp);}
+.nico{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+
+/* ===== SCREEN 2: DETAIL ===== */
+.himg{height:195px;display:flex;align-items:center;justify-content:center;font-size:62px;position:relative;background:linear-gradient(135deg,#E8F1FC,#4B82C3);flex-shrink:0;}
+.hbk{position:absolute;top:48px;left:14px;width:36px;height:36px;background:rgba(255,255,255,.92);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.15);}
+.dc{padding:14px;}
+.vr{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
+.vn{font-size:11px;font-weight:800;color:var(--gm);text-transform:uppercase;letter-spacing:.5px;}
+.vb{background:var(--gmt);color:var(--gd);border-radius:4px;padding:1px 6px;font-size:9px;font-weight:800;}
+.dt{font-family:Calibri, sans-serif;font-weight:800;font-size:21px;color:var(--tp);margin-bottom:7px;line-height:1.2;}
+.rr{display:flex;align-items:center;gap:7px;margin-bottom:11px;font-size:12px;color:var(--ts);}
+.st{color:#FFBA08;font-size:13px;}
+.tgr{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px;}
+.ft{background:var(--gmt);color:var(--gd);border-radius:6px;padding:3px 9px;font-size:10.5px;font-weight:800;}
+.ft.or2{background:var(--orp);color:#B34200;}
+.ds{background:white;border-radius:14px;padding:13px;margin-bottom:10px;box-shadow:0 1px 5px rgba(0,0,0,.07);}
+.dst{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--tm);margin-bottom:9px;}
+.qbw{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
+.qb{flex:1;height:8px;background:var(--bg);border-radius:4px;overflow:hidden;}
+.qf{height:100%;background:linear-gradient(90deg,var(--or),var(--orl));border-radius:4px;width:30%;}
+.qt{font-weight:800;font-size:13px;color:var(--tp);}
+.ptr{display:flex;gap:10px;align-items:center;}
+.ptm{font-family:var(--fd);font-weight:800;font-size:17px;color:var(--tp);}
+.tpill{background:var(--orp);color:var(--or);border-radius:20px;padding:4px 11px;font-size:12px;font-weight:800;display:flex;align-items:center;gap:5px;}
+.mp{height:85px;background:linear-gradient(135deg,#E8F1FC,#C8DCF5);border-radius:10px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;font-size:26px;}
+.mp::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 18px,rgba(0,0,0,.03) 18px,rgba(0,0,0,.03) 19px),repeating-linear-gradient(90deg,transparent,transparent 18px,rgba(0,0,0,.03) 18px,rgba(0,0,0,.03) 19px);}
+.madr{font-size:12px;color:var(--ts);margin-top:7px;font-weight:600;}
+.ctxt{font-size:11.5px;color:var(--tm);line-height:1.6;}
+.accs{background:var(--bg);border-radius:10px;padding:10px 13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:700;color:var(--ts);}
+.acc-body{padding:10px 13px 0;font-size:12px;color:var(--ts);line-height:1.6;display:none;}
+.acc-body.open{display:block;}
+.rbz{position:sticky;bottom:0;background:var(--cr);padding:10px 14px;border-top:1px solid var(--bd);flex-shrink:0;}
+.bpri{width:100%;background:linear-gradient(135deg,var(--or),var(--orl));color:white;border:none;border-radius:14px;padding:15px;font-family:var(--fd);font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;box-shadow:0 4px 16px rgba(255,95,5,.35);}
+.bpri:active{transform:scale(.98);}
+.ptb{font-family:Arial, sans-serif;font-weight:bold;font-size:22px;color:var(--tp);margin-bottom:7px;display:flex;align-items:baseline;gap:4px;}
+.ptb small{font-size:13px;color:var(--tm);font-family:Arial, sans-serif;font-weight:bold;}
+
+/* ===== SCREEN 3: CONFIRM ===== */
+.cfh{background:linear-gradient(160deg,var(--gp) 0%,var(--or) 115%);padding:58px 22px 22px;text-align:center;flex-shrink:0;}
+.sr2{width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;border:2px solid rgba(255,255,255,.3);font-size:30px;}
+.cft{font-family:Aptos, sans-serif;font-weight:bold;font-size:22px;color:white;margin-bottom:3px;}
+.cfs{font-size:12.5px;color:rgba(255,255,255,.75);font-weight:500;}
+.qrs{background:white;margin:-18px 14px 12px;border-radius:20px;padding:18px;box-shadow:var(--sh);text-align:center;}
+.qrl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--tm);margin-bottom:12px;}
+.rid{font-family:var(--fd);font-weight:800;font-size:13px;color:var(--ts);letter-spacing:2px;margin-top:10px;}
+.stch{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;}
+.sta{background:var(--gmt);color:var(--gd);}
+.std{background:var(--bg);color:var(--ts);}
+.stc{background:#E3F2FD;color:#1565C0;}
+.stl{background:var(--orp);color:var(--or);}
+.cds{background:var(--orp);border-radius:14px;padding:13px 16px;margin:0 14px 12px;display:flex;align-items:center;gap:12px;}
+.cdn{font-family:var(--fd);font-weight:800;font-size:26px;color:var(--or);min-width:80px;}
+.cdl{font-size:11.5px;color:#B34200;font-weight:700;}
+.pi{display:flex;align-items:flex-start;gap:9px;padding:9px 0;border-bottom:1px solid var(--bd);font-size:12px;color:var(--ts);line-height:1.5;}
+.pi:last-child{border-bottom:none;}
+.pin{width:21px;height:21px;background:var(--or);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:800;flex-shrink:0;}
+.bdgr{width:100%;background:transparent;color:var(--rd);border:1.5px solid rgba(193,18,31,.3);border-radius:14px;padding:12px;font-family:var(--fb);font-size:13.5px;font-weight:800;cursor:pointer;transition:all .2s;margin-top:8px;}
+.bsec{width:100%;background:var(--bg);color:var(--tp);border:none;border-radius:14px;padding:12px;font-family:var(--fb);font-size:13.5px;font-weight:800;cursor:pointer;margin-bottom:8px;transition:all .2s;}
+
+/* ===== SCREEN 4: VENDOR ===== */
+.vh{background:linear-gradient(135deg,var(--gp),var(--or));padding:48px 18px 18px;flex-shrink:0;}
+.vht{font-family:Aptos, sans-serif;font-weight:bold;font-size:21px;color:white;margin-bottom:3px;}
+.vhs{font-size:12px;color:rgba(255,255,255,.7);font-weight:500;}
+.vpi{display:flex;gap:4px;margin-top:12px;}
+.vps{height:4px;border-radius:2px;flex:1;background:rgba(255,255,255,.3);}
+.vps.act{background:var(--or);}
+.vps.dn{background:rgba(255,255,255,.6);}
+.fs{background:white;border-radius:16px;padding:14px;margin-bottom:10px;box-shadow:0 1px 5px rgba(0,0,0,.06);}
+.fl{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--tm);margin-bottom:6px;display:block;}
+.fi{width:100%;background:var(--bg);border:1.5px solid transparent;border-radius:10px;padding:11px 13px;font-family:var(--fb);font-size:13.5px;color:var(--tp);outline:none;transition:border-color .2s;margin-bottom:10px;}
+.fi:focus{border-color:var(--gm);background:white;}
+.fi::placeholder{color:var(--tm);}
+.fi:last-child{margin-bottom:0;}
+.price-input{font-family:Arial, sans-serif;font-weight:bold;}
+.tcs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px;}
+.tc{background:var(--gmt);color:var(--gd);border:1.5px solid var(--gpa);border-radius:10px;padding:8px 12px;font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .2s;font-family:var(--fb);}
+.tc.sel{background:var(--or);color:white;border-color:var(--or);}
+.qst{display:flex;align-items:center;background:var(--bg);border-radius:10px;overflow:hidden;width:130px;}
+.stb{width:38px;height:42px;border:none;background:transparent;font-size:19px;cursor:pointer;color:var(--or);font-weight:800;transition:background .15s;font-family:var(--fb);}
+.stb:hover{background:var(--gpa);}
+.stv{flex:1;text-align:center;font-family:var(--fd);font-weight:800;font-size:17px;color:var(--tp);}
+.ptg{display:flex;background:var(--bg);border-radius:10px;padding:4px;margin-bottom:10px;}
+.ptgb{flex:1;padding:8px;text-align:center;border-radius:7px;font-size:12.5px;font-weight:bold;cursor:pointer;transition:all .2s;border:none;background:transparent;color:var(--tm);font-family:Arial, sans-serif;}
+.ptgb.act.free{background:var(--gm);color:white;}
+.ptgb.act.paid{background:var(--or);color:white;}
+.tr2{display:flex;gap:8px;}
+.tr2>*{flex:1;}
+.dmc{display:flex;gap:6px;flex-wrap:wrap;}
+.dch{background:var(--bg);border:1.5px solid transparent;border-radius:8px;padding:5px 10px;font-size:11px;font-weight:800;cursor:pointer;color:var(--ts);transition:all .2s;font-family:var(--fb);}
+.dch.act{background:var(--gmt);border-color:var(--gl);color:var(--gd);}
+.pu{background:var(--bg);border:2px dashed var(--gpa);border-radius:12px;height:76px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;color:var(--tm);font-size:12px;font-weight:700;cursor:pointer;}
+.bpub{width:100%;background:linear-gradient(135deg,var(--or),var(--orl));color:white;border:none;border-radius:14px;padding:15px;font-family:var(--fd);font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 16px rgba(255,95,5,.35);transition:all .2s;}
+.bpub:active{transform:scale(.98);}
+
+/* ===== SCREEN 5: ORGANIZER ===== */
+.oh{background:linear-gradient(135deg,var(--gp),var(--or));padding:48px 18px 18px;flex-shrink:0;}
+.lch{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.2);color:white;border-radius:20px;padding:4px 11px;font-size:10.5px;font-weight:800;margin-bottom:9px;}
+.ld{width:7px;height:7px;background:white;border-radius:50%;animation:pulse 1s infinite;}
+.oht{font-family:Aptos, sans-serif;font-weight:bold;font-size:21px;color:white;margin-bottom:2px;}
+.ohs{font-size:12px;color:rgba(255,255,255,.7);}
+.fir{display:flex;align-items:center;gap:8px;background:var(--bg);border-radius:10px;padding:9px 13px;margin-bottom:7px;}
+.fii{font-size:19px;}
+.fin{flex:1;font-weight:700;font-size:13px;color:var(--tp);}
+.fiq{font-size:12px;color:var(--ts);font-weight:600;}
+.firm{width:23px;height:23px;background:rgba(193,18,31,.1);color:var(--rd);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;}
+.aib{width:100%;background:transparent;border:1.5px dashed var(--gpa);border-radius:10px;padding:9px;color:var(--gm);font-weight:800;font-size:12.5px;cursor:pointer;text-align:center;font-family:var(--fb);transition:all .2s;}
+.aib:hover{background:var(--gmt);border-color:var(--gl);}
+.rtg{display:flex;gap:7px;}
+.rb{flex:1;padding:8px 4px;border-radius:8px;border:1.5px solid var(--bd);background:var(--bg);font-size:11.5px;font-weight:800;cursor:pointer;text-align:center;color:var(--ts);font-family:var(--fb);transition:all .2s;}
+.rb.act{background:var(--or);color:white;border-color:var(--or);}
+.pn{background:white;border-radius:14px;padding:11px 13px;margin-bottom:10px;box-shadow:var(--sh);display:flex;gap:9px;border-left:4px solid var(--or);}
+.pni{width:35px;height:35px;background:var(--orp);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.pnt{font-size:11.5px;line-height:1.55;color:var(--ts);}
+.pnt strong{color:var(--tp);}
+.bal{width:100%;background:linear-gradient(135deg,var(--or),var(--orl));color:white;border:none;border-radius:14px;padding:15px;font-family:var(--fd);font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 16px rgba(255,95,5,.35);transition:all .2s;}
+.bal:active{transform:scale(.98);}
+.bcl{width:100%;background:rgba(193,18,31,.08);color:var(--rd);border:1.5px solid rgba(193,18,31,.2);border-radius:14px;padding:12px;font-family:var(--fb);font-size:13px;font-weight:800;cursor:pointer;margin-top:8px;}
+
+/* ===== SCREEN 6: ADMIN ===== */
+.admh{background:linear-gradient(135deg,var(--gp),var(--or));padding:48px 18px 18px;flex-shrink:0;}
+.admt{font-family:Aptos, sans-serif;font-weight:bold;font-size:19px;color:white;margin-bottom:2px;}
+.adms{font-size:11px;color:rgba(255,255,255,.6);font-weight:500;}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px;}
+.sc{background:white;border-radius:14px;padding:13px;box-shadow:0 1px 5px rgba(0,0,0,.08);}
+.sl{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--tm);margin-bottom:5px;display:flex;align-items:center;gap:5px;}
+.slico{font-size:13px;}
+.sv{font-family:var(--fd);font-weight:800;font-size:26px;color:var(--tp);line-height:1;margin-bottom:3px;}
+.sc.grn .sv{color:var(--or);}
+.sc.orn .sv{color:var(--or);}
+.scg{font-size:10.5px;font-weight:700;}
+.scg.up{color:var(--gm);}
+.scg.dn{color:var(--rd);}
+.scg.ne{color:var(--or);}
+.qa{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px;}
+.qab{background:white;border:1.5px solid var(--bd);border-radius:12px;padding:11px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;font-size:10.5px;font-weight:800;color:var(--ts);font-family:var(--fb);transition:all .2s;}
+.qab:hover{background:var(--gmt);border-color:var(--gl);color:var(--gd);}
+.qabi{font-size:19px;}
+.th{display:grid;grid-template-columns:2fr 1fr 1fr;gap:6px;padding:7px 13px;font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--tm);}
+.trow{display:grid;grid-template-columns:2fr 1fr 1fr;gap:6px;padding:9px 13px;border-top:1px solid var(--bd);font-size:11.5px;align-items:center;}
+.trn{font-weight:700;color:var(--tp);}
+.trs{font-size:10.5px;color:var(--tm);margin-top:1px;}
+.fi2{background:#FFF5F5;border:1px solid #FFD0D0;border-radius:12px;padding:11px 13px;margin-bottom:7px;display:flex;gap:9px;align-items:flex-start;}
+.flic{font-size:15px;}
+.flc{flex:1;}
+.flt{font-size:12.5px;font-weight:800;color:var(--tp);margin-bottom:2px;}
+.fls{font-size:10.5px;color:var(--tm);}
+.fla{font-size:11px;font-weight:800;color:var(--rd);cursor:pointer;}
+
+/* PANEL */
+.panel{flex:1;min-width:0;max-width:268px;}
+.pcard{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:14px;margin-bottom:14px;color:white;}
+.pct{font-family:var(--fd);font-size:12px;font-weight:800;color:var(--gpa);text-transform:uppercase;letter-spacing:.6px;margin-bottom:9px;}
+.pit{display:flex;gap:7px;font-size:11.5px;color:rgba(255,255,255,.8);margin-bottom:7px;line-height:1.55;}
+.pid{width:6px;height:6px;border-radius:50%;background:var(--gpa);margin-top:5px;flex-shrink:0;}
+.ltag{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18);color:white;border-radius:5px;padding:2px 7px;font-size:9.5px;font-weight:800;margin-right:4px;margin-bottom:4px;display:inline-block;letter-spacing:.3px;}
+.spc{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:13px;color:rgba(255,255,255,.85);font-size:11.5px;line-height:1.75;font-style:italic;}
+.spct{font-family:var(--fd);font-style:normal;font-size:10.5px;font-weight:800;color:var(--orl);text-transform:uppercase;letter-spacing:.8px;margin-bottom:7px;}
+/* BOTTOM FLOW */
+.bsec{max-width:760px;width:100%;margin-top:24px;}
+.bsec h2{font-family:var(--fd);font-size:14px;font-weight:800;color:var(--cr);opacity:.8;text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px;}
+.flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:20px;}
+.fls2{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:7px 12px;text-align:center;color:white;font-size:10.5px;font-weight:700;}
+.fls2 small{display:block;font-size:9px;opacity:.55;margin-top:2px;}
+.farr{color:rgba(255,255,255,.45);font-size:17px;}
+.drgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;}
+.drc{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:13px;color:rgba(255,255,255,.82);font-size:11.5px;line-height:1.65;}
+.drt{font-family:var(--fd);font-size:12.5px;font-weight:800;color:var(--gpa);margin-bottom:5px;}
+.drn{font-size:22px;font-weight:800;color:rgba(255,255,255,.15);font-family:var(--fd);float:right;line-height:1;}
+hr.div{border:none;border-top:1px solid rgba(255,255,255,.12);margin:0 0 18px;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="ph">
+  <h1><img class="site-logo" src="assets/logo-transparent.png" alt="Too Good To Go UIUC logo">Too Good To Go UIUC</h1>
+</div>
+
+<!-- SCREEN TABS -->
+<div class="tabs">
+  <button class="tab act" onclick="switchScreen(1,this)">🏠 Home Discover<small>Student · Screen 1</small></button>
+  <button class="tab" onclick="switchScreen(2,this)">🥗 Offer Detail<small>Student · Screen 2</small></button>
+  <button class="tab" onclick="switchScreen(3,this)">✅ Reservation<small>Student · Screen 3</small></button>
+  <button class="tab" onclick="switchScreen(4,this)">🏪 Create Offer<small>Vendor · Screen 4</small></button>
+  <button class="tab" onclick="switchScreen(5,this)">📣 Leftover Alert<small>Organizer · Screen 5</small></button>
+  <button class="tab" onclick="switchScreen(6,this)">📊 Admin Panel<small>Admin · Screen 6</small></button>
+</div>
+
+<!-- MAIN WRAPPER -->
+<div class="wrap">
+  <!-- PHONE FRAME -->
+  <div class="pf">
+    <div class="ps">
+
+      <!-- ======================== SCREEN 1: STUDENT HOME ======================== -->
+      <div class="scr act" id="scr1">
+        <div class="sb"><span>9:41</span><span>UIUC Campus</span><div class="sbi">▲▲▲ 📶 🔋</div></div>
+        <div class="ah">
+          <div class="al"><img class="app-logo" src="assets/logo-transparent.png" alt="Too Good To Go UIUC logo"></div>
+          <div class="an">Too Good To Go UIUC</div>
+          <div class="hi" onclick="alert('3 new notifications!')"><span>🔔</span><div class="nd"></div></div>
+          <div class="hi" style="background:linear-gradient(135deg,#FF5F05,#13294B);font-size:13px;font-weight:800;color:white;">GC</div>
+        </div>
+        <div class="asub">UIUC Campus · 42 offers near you</div>
+        <div class="home-search-band" style="padding:0 18px 14px;">
+          <div class="sr">🔍&nbsp; Search food near you...</div>
+        </div>
+        <div class="scrl">
+          <div class="ca" style="padding-bottom:4px;">
+            <div class="tr">
+              <div class="vt">
+                <button class="tb act" id="listBtn" onclick="toggleView('list')">☰ List</button>
+                <button class="tb" id="mapBtn" onclick="toggleView('map')">🗺 Map</button>
+              </div>
+              <span class="slb">Nearby Now 📍</span>
+            </div>
+            <div class="fc">
+              <div class="ch act" onclick="toggleChip(this)">All</div>
+              <div class="ch" onclick="toggleChip(this)">🌱 Vegan</div>
+              <div class="ch" onclick="toggleChip(this)">🌾 Gluten-Free</div>
+              <div class="ch" onclick="toggleChip(this)">☪️ Halal</div>
+              <div class="ch" onclick="toggleChip(this)">🆓 Free Only</div>
+              <div class="ch" onclick="toggleChip(this)">📍 &lt;0.5mi</div>
+              <div class="ch" onclick="toggleChip(this)">⏰ Ending Soon</div>
+            </div>
+            <!-- CARDS -->
+            <div id="listView">
+              <div class="oc" onclick="switchScreen(2,document.querySelectorAll('.tab')[1])">
+                <div class="ci gr">
+                  🥗
+                  <div class="ob bd">Discounted</div>
+                  <div class="tb2">⏱ <span class="c1">23:47</span></div>
+                </div>
+                <div class="cb">
+                  <div class="cv">IMU Food Court</div>
+                  <div class="ct">Veggie Wraps & Samosas</div>
+                  <div class="cm"><span>📍 0.2 mi</span><span>🕑 Until 3:15 PM</span><span>🌱 Vegetarian</span></div>
+                  <div class="cf"><div class="cp">$1.50</div><div class="cq"><span class="qdot"></span>3 portions left</div></div>
+                </div>
+              </div>
+              <div class="oc" onclick="switchScreen(2,document.querySelectorAll('.tab')[1])">
+                <div class="ci tl">
+                  🍕
+                  <div class="ob bf">FREE</div>
+                  <div class="tb2">⏱ <span class="c2">45:12</span></div>
+                </div>
+                <div class="cb">
+                  <div class="cv">CS Department Colloquium</div>
+                  <div class="ct">Pizza Slices & Soda Cans</div>
+                  <div class="cm"><span>📍 0.4 mi</span><span>🕑 Until 4:00 PM</span><span>🏛 Campus Event</span></div>
+                  <div class="cf"><div class="cp" style="color:var(--gm);">FREE</div><div class="cq"><span class="qdot"></span>8 portions left</div></div>
+                </div>
+              </div>
+              <div class="oc">
+                <div class="ci wm">
+                  🥐
+                  <div class="ob bd">Discounted</div>
+                  <div class="tb2">⏱ <span class="c3">1:02:30</span></div>
+                </div>
+                <div class="cb">
+                  <div class="cv">Espresso Royale Café</div>
+                  <div class="ct">Assorted Pastries & Muffins</div>
+                  <div class="cm"><span>📍 0.1 mi</span><span>🕑 Until 5:00 PM</span><span>🥛 Contains Dairy</span></div>
+                  <div class="cf"><div class="cp">$0.75</div><div class="cq"><span class="qdot"></span>5 items left</div></div>
+                </div>
+              </div>
+              <div class="oc">
+                <div class="ci or">
+                  🥪
+                  <div class="ob bf">FREE</div>
+                  <div class="tb2">⏱ <span class="c4">31:00</span></div>
+                </div>
+                <div class="cb">
+                  <div class="cv">Undergraduate Library</div>
+                  <div class="ct">Sandwiches & Fruit Cups</div>
+                  <div class="cm"><span>📍 0.6 mi</span><span>🕑 Until 3:45 PM</span><span>🏛 Study Event</span></div>
+                  <div class="cf"><div class="cp" style="color:var(--gm);">FREE</div><div class="cq"><span class="qdot"></span>12 items left</div></div>
+                </div>
+              </div>
+              <div style="text-align:center;padding:10px 0 20px;font-size:12px;color:var(--tm);font-weight:700;">🌿 Showing 4 of 42 nearby offers</div>
+            </div>
+            <div id="mapView" style="display:none;">
+              <div class="campus-map">
+                <!-- Map pins -->
+                <div style="position:absolute;top:35%;left:48%;transform:translate(-50%,-50%);">
+                  <div class="map-price" style="background:var(--or);color:white;border-radius:20px 20px 20px 4px;padding:6px 10px;font-size:11px;white-space:nowrap;box-shadow:0 3px 10px rgba(0,0,0,.2);">🥗 $1.50 · 0.2mi</div>
+                </div>
+                <div style="position:absolute;top:55%;left:62%;transform:translate(-50%,-50%);">
+                  <div class="map-price" style="background:var(--gm);color:white;border-radius:20px 20px 20px 4px;padding:6px 10px;font-size:11px;white-space:nowrap;box-shadow:0 3px 10px rgba(0,0,0,.2);">🍕 FREE · 0.4mi</div>
+                </div>
+                <div style="position:absolute;top:42%;left:28%;transform:translate(-50%,-50%);">
+                  <div class="map-price" style="background:var(--or);color:white;border-radius:20px 20px 20px 4px;padding:6px 10px;font-size:11px;white-space:nowrap;box-shadow:0 3px 10px rgba(0,0,0,.2);">🥐 $0.75 · 0.1mi</div>
+                </div>
+                <div style="position:absolute;top:70%;left:38%;transform:translate(-50%,-50%);">
+                  <div class="map-price" style="background:var(--gm);color:white;border-radius:20px 20px 20px 4px;padding:6px 10px;font-size:11px;white-space:nowrap;box-shadow:0 3px 10px rgba(0,0,0,.2);">🥪 FREE · 0.6mi</div>
+                </div>
+                <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:white;padding:6px 16px;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,.15);font-size:12px;color:var(--ts);font-weight:700;">📍 You are here · UIUC Campus</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bn">
+          <div class="ni act"><div class="nico">🏠</div>Discover</div>
+          <div class="ni" onclick="toggleView('map')"><div class="nico">🗺</div>Map</div>
+          <div class="ni"><div class="nico">🛍</div>My Bag</div>
+          <div class="ni"><div class="nico">👤</div>Profile</div>
+        </div>
+      </div>
+
+      <!-- ======================== SCREEN 2: OFFER DETAIL ======================== -->
+      <div class="scr" id="scr2">
+        <div class="sb" style="background:transparent;position:absolute;top:0;left:0;right:0;z-index:10;color:var(--tp);background:transparent;"></div>
+        <div class="himg">
+          🥗
+          <div class="hbk" onclick="switchScreen(1,document.querySelectorAll('.tab')[0])">←</div>
+          <div style="position:absolute;bottom:12px;right:12px;" class="stch sta">🌱 Vegetarian</div>
+        </div>
+        <div class="scrl">
+          <div class="dc">
+            <div class="vr">
+              <span class="vn">IMU Food Court</span>
+              <span class="vb">✓ Verified Vendor</span>
+            </div>
+            <div class="dt">Veggie Wraps & Samosas</div>
+            <div class="rr"><span class="st">★★★★☆</span><span>4.3 (128 ratings)</span><span>·</span><span style="color:var(--or);font-weight:700;">Very popular</span></div>
+            <div class="tgr">
+              <span class="ft">🌱 Vegetarian</span>
+              <span class="ft">🌾 Gluten-Friendly</span>
+              <span class="ft or2">⚠️ Contains Nuts</span>
+              <span class="ft">☪️ Halal</span>
+            </div>
+            <p style="font-size:13px;color:var(--ts);line-height:1.65;margin-bottom:13px;">Fresh house-made veggie wraps and crispy samosas from today's lunch service. Portions are generous — each bag includes 2 wraps or 3 samosas with mint chutney. Made in a shared kitchen.</p>
+            <!-- Quantity -->
+            <div class="ds">
+              <div class="dst">Availability</div>
+              <div class="qbw">
+                <div class="qb"><div class="qf"></div></div>
+                <span class="qt">3 left</span>
+              </div>
+              <div style="font-size:12px;color:var(--tm);">7 of 10 portions claimed · Moving fast!</div>
+            </div>
+            <!-- Pickup window -->
+            <div class="ds">
+              <div class="dst">Pickup Window</div>
+              <div class="ptr">
+                <span class="ptm">2:30 – 3:15 PM</span>
+                <div class="tpill">⏱ <span id="det-timer">38:22</span> left</div>
+              </div>
+              <div style="font-size:12px;color:var(--tm);margin-top:5px;">Today, April 15, 2026 · Closes automatically at 3:15 PM</div>
+            </div>
+            <!-- Location -->
+            <div class="ds">
+              <div class="dst">Location</div>
+              <div class="mp">📍</div>
+              <div class="madr">Illinois Union Food Court, 1401 W Green St, Urbana · Room 103</div>
+            </div>
+            <!-- Cancellation -->
+            <div class="ds">
+              <div class="dst">Cancellation Policy</div>
+              <p class="ctxt">You may cancel your reservation up to <strong>10 minutes</strong> before your pickup window closes. Late cancellations reduce your trust score. 3 no-shows may restrict your account.</p>
+            </div>
+            <!-- Accordion -->
+            <div class="ds" style="padding:0;overflow:hidden;">
+              <div class="accs" onclick="toggleAcc(this)"><span>📋 Show Pickup Instructions</span><span id="accArrow">▼</span></div>
+              <div class="acc-body" id="accBody">
+                <div class="pi"><div class="pin">1</div><span>Open the app and navigate to <strong>My Reservations</strong></span></div>
+                <div class="pi"><div class="pin">2</div><span>Show the <strong>QR code</strong> to the vendor at the counter</span></div>
+                <div class="pi"><div class="pin">3</div><span>Collect your food and confirm pickup in the app</span></div>
+                <div style="height:10px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="rbz">
+          <div class="ptb"><span>$1.50</span><small>per portion</small></div>
+          <button class="bpri" onclick="switchScreen(3,document.querySelectorAll('.tab')[2])">✅&nbsp; Reserve My Portion</button>
+        </div>
+      </div>
+
+      <!-- ======================== SCREEN 3: CONFIRMATION ======================== -->
+      <div class="scr" id="scr3">
+        <div class="cfh">
+          <div class="sr2">✅</div>
+          <div class="cft">You're Reserved!</div>
+          <div class="cfs">Your food is being held — pick it up on time 🌿</div>
+        </div>
+        <div class="scrl">
+          <div class="qrs">
+            <div class="qrl">Your Pickup QR Code</div>
+            <!-- SVG QR Code -->
+            <svg class="qr-code" width="150" height="150" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+              <rect width="150" height="150" fill="white"/>
+              <!-- TL finder -->
+              <rect x="10" y="10" width="42" height="42" rx="4" fill="#13294B"/><rect x="16" y="16" width="30" height="30" rx="2" fill="white"/><rect x="22" y="22" width="18" height="18" rx="1" fill="#13294B"/>
+              <!-- TR finder -->
+              <rect x="98" y="10" width="42" height="42" rx="4" fill="#13294B"/><rect x="104" y="16" width="30" height="30" rx="2" fill="white"/><rect x="110" y="22" width="18" height="18" rx="1" fill="#13294B"/>
+              <!-- BL finder -->
+              <rect x="10" y="98" width="42" height="42" rx="4" fill="#13294B"/><rect x="16" y="104" width="30" height="30" rx="2" fill="white"/><rect x="22" y="110" width="18" height="18" rx="1" fill="#13294B"/>
+              <!-- Data modules (fake but realistic) -->
+              <rect x="58" y="10" width="6" height="6" fill="#13294B"/><rect x="70" y="10" width="6" height="6" fill="#13294B"/><rect x="82" y="10" width="6" height="6" fill="#13294B"/>
+              <rect x="58" y="22" width="6" height="6" fill="#13294B"/><rect x="76" y="22" width="6" height="6" fill="#13294B"/>
+              <rect x="64" y="34" width="6" height="6" fill="#13294B"/><rect x="82" y="34" width="6" height="6" fill="#13294B"/>
+              <rect x="58" y="46" width="6" height="6" fill="#13294B"/><rect x="70" y="46" width="6" height="6" fill="#13294B"/><rect x="82" y="46" width="6" height="6" fill="#13294B"/>
+              <rect x="10" y="58" width="6" height="6" fill="#13294B"/><rect x="22" y="58" width="6" height="6" fill="#13294B"/><rect x="46" y="58" width="6" height="6" fill="#13294B"/>
+              <rect x="58" y="58" width="6" height="6" fill="#13294B"/><rect x="70" y="58" width="6" height="6" fill="#13294B"/><rect x="82" y="58" width="6" height="6" fill="#13294B"/><rect x="94" y="58" width="6" height="6" fill="#13294B"/><rect x="106" y="58" width="6" height="6" fill="#13294B"/><rect x="118" y="58" width="6" height="6" fill="#13294B"/><rect x="130" y="58" width="6" height="6" fill="#13294B"/>
+              <rect x="10" y="70" width="6" height="6" fill="#13294B"/><rect x="34" y="70" width="6" height="6" fill="#13294B"/><rect x="58" y="70" width="6" height="6" fill="#13294B"/><rect x="76" y="70" width="6" height="6" fill="#13294B"/><rect x="94" y="70" width="6" height="6" fill="#13294B"/><rect x="118" y="70" width="6" height="6" fill="#13294B"/>
+              <rect x="22" y="82" width="6" height="6" fill="#13294B"/><rect x="46" y="82" width="6" height="6" fill="#13294B"/><rect x="64" y="82" width="6" height="6" fill="#13294B"/><rect x="88" y="82" width="6" height="6" fill="#13294B"/><rect x="106" y="82" width="6" height="6" fill="#13294B"/><rect x="130" y="82" width="6" height="6" fill="#13294B"/>
+              <rect x="58" y="94" width="6" height="6" fill="#13294B"/><rect x="70" y="94" width="6" height="6" fill="#13294B"/><rect x="94" y="94" width="6" height="6" fill="#13294B"/><rect x="118" y="94" width="6" height="6" fill="#13294B"/>
+              <rect x="58" y="106" width="6" height="6" fill="#13294B"/><rect x="76" y="106" width="6" height="6" fill="#13294B"/><rect x="94" y="106" width="6" height="6" fill="#13294B"/><rect x="106" y="106" width="6" height="6" fill="#13294B"/><rect x="130" y="106" width="6" height="6" fill="#13294B"/>
+              <rect x="64" y="118" width="6" height="6" fill="#13294B"/><rect x="82" y="118" width="6" height="6" fill="#13294B"/><rect x="106" y="118" width="6" height="6" fill="#13294B"/><rect x="118" y="118" width="6" height="6" fill="#13294B"/>
+              <rect x="58" y="130" width="6" height="6" fill="#13294B"/><rect x="70" y="130" width="6" height="6" fill="#13294B"/><rect x="94" y="130" width="6" height="6" fill="#13294B"/><rect x="118" y="130" width="6" height="6" fill="#13294B"/>
+              <!-- Leaf overlay -->
+              <text x="75" y="78" text-anchor="middle" font-size="18" fill="#13294B" font-family="sans-serif">🌿</text>
+            </svg>
+            <div class="rid">GG-20260415-0034</div>
+            <div style="margin-top:8px;"><span class="stch sta">● ACTIVE</span></div>
+          </div>
+          <!-- Countdown -->
+          <div class="cds">
+            <div>
+              <div class="cdn" id="conf-timer">38:22</div>
+              <div class="cdl">Pickup closes at 3:15 PM</div>
+            </div>
+            <div style="font-size:28px;">⏳</div>
+          </div>
+          <!-- Instructions -->
+          <div class="ds" style="margin:0 14px 12px;background:white;border-radius:14px;padding:13px;box-shadow:var(--sh);">
+            <div class="dst">Pickup Instructions</div>
+            <div class="pi"><div class="pin">1</div><span>Head to <strong>IMU Food Court</strong>, 1401 W Green St, Room 103</span></div>
+            <div class="pi"><div class="pin">2</div><span>Show this <strong>QR code</strong> to the counter staff</span></div>
+            <div class="pi"><div class="pin">3</div><span>Collect your portion and tap <strong>Confirm Pickup</strong> in the app</span></div>
+          </div>
+          <!-- Actions -->
+          <div style="padding:0 14px 14px;">
+            <button class="bsec">📅 Add to Calendar</button>
+            <button class="bdgr" onclick="if(confirm('Cancel this reservation?'))switchScreen(1,document.querySelectorAll(\'.tab\')[0])">✕ Cancel Reservation</button>
+            <p style="font-size:11px;color:var(--tm);text-align:center;margin-top:10px;line-height:1.5;">Cancelling within 10 min of pickup may affect your trust score.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================== SCREEN 4: VENDOR CREATE OFFER ======================== -->
+      <div class="scr" id="scr4">
+        <div class="vh">
+          <div class="vht">Post New Offer 🏪</div>
+          <div class="vhs">Fill in details — takes under 60 seconds</div>
+          <div class="vpi"><div class="vps act"></div><div class="vps"></div></div>
+        </div>
+        <div class="scrl">
+          <div style="padding:12px 12px 80px;">
+            <!-- Templates -->
+            <div class="fs">
+              <span class="fl">Quick Templates</span>
+              <div class="tcs">
+                <div class="tc sel" onclick="selectTemplate(this,'Assorted Pastries & Baked Goods','Freshly baked items from today\'s service.')">🥐 Bakery</div>
+                <div class="tc" onclick="selectTemplate(this,'Hot Prepared Food','Today\'s hot lunch items.')">🍲 Hot Food</div>
+                <div class="tc" onclick="selectTemplate(this,'Coffee & Beverages','Drinks and specialty coffee.')">☕ Drinks</div>
+                <div class="tc" onclick="selectTemplate(this,'Fresh Produce','Surplus fruits and vegetables.')">🥦 Produce</div>
+              </div>
+            </div>
+            <!-- Item Info -->
+            <div class="fs">
+              <span class="fl">Item Name *</span>
+              <input class="fi" id="itemName" type="text" placeholder="e.g. Veggie Wraps & Samosas" value="Assorted Pastries & Baked Goods">
+              <span class="fl">Description</span>
+              <input class="fi" type="text" placeholder="Describe what's included, allergens..." value="Freshly baked items from today's service.">
+              <span class="fl">Food Category</span>
+              <select class="fi" style="margin-bottom:0;">
+                <option>Bakery & Pastries</option>
+                <option>Hot Food</option>
+                <option>Drinks & Beverages</option>
+                <option>Salads & Wraps</option>
+                <option>Fruit & Produce</option>
+                <option>Snacks & Sides</option>
+              </select>
+            </div>
+            <!-- Quantity & Price -->
+            <div class="fs">
+              <span class="fl">Quantity Available *</span>
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+                <div class="qst">
+                  <button class="stb" onclick="changeQty(-1)">−</button>
+                  <span class="stv" id="qtyVal">8</span>
+                  <button class="stb" onclick="changeQty(1)">+</button>
+                </div>
+                <span style="font-size:12px;color:var(--tm);font-weight:600;">portions</span>
+              </div>
+              <span class="fl">Pricing *</span>
+              <div class="ptg">
+                <button class="ptgb act free" id="freeBtn" onclick="setPriceMode('free')">🆓 FREE</button>
+                <button class="ptgb paid" id="paidBtn" onclick="setPriceMode('paid')">💰 Discounted</button>
+              </div>
+              <div id="priceField" style="display:none;">
+                <input class="fi price-input" type="text" placeholder="e.g. 1.50" style="margin-bottom:0;">
+              </div>
+            </div>
+            <!-- Dietary Labels -->
+            <div class="fs">
+              <span class="fl">Dietary Labels</span>
+              <div class="dmc">
+                <div class="dch" onclick="toggleDiet(this)">🌱 Vegan</div>
+                <div class="dch act" onclick="toggleDiet(this)">🥛 Dairy-Free</div>
+                <div class="dch" onclick="toggleDiet(this)">🌾 Gluten-Free</div>
+                <div class="dch act" onclick="toggleDiet(this)">☪️ Halal</div>
+                <div class="dch" onclick="toggleDiet(this)">🐟 Contains Fish</div>
+                <div class="dch" onclick="toggleDiet(this)">🥜 Contains Nuts</div>
+                <div class="dch" onclick="toggleDiet(this)">🌶 Spicy</div>
+              </div>
+            </div>
+            <!-- Pickup Window -->
+            <div class="fs">
+              <span class="fl">Pickup Window *</span>
+              <div class="tr2">
+                <div>
+                  <div style="font-size:10.5px;color:var(--tm);font-weight:700;margin-bottom:4px;">STARTS</div>
+                  <input class="fi" type="time" value="14:30" style="margin-bottom:0;">
+                </div>
+                <div>
+                  <div style="font-size:10.5px;color:var(--tm);font-weight:700;margin-bottom:4px;">ENDS</div>
+                  <input class="fi" type="time" value="15:15" style="margin-bottom:0;">
+                </div>
+              </div>
+            </div>
+            <!-- Photo -->
+            <div class="fs">
+              <span class="fl">Add Photo (Optional)</span>
+              <div class="pu" onclick="alert('Camera / Gallery would open here')">📷<span>Tap to add photo</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="rbz">
+          <button class="bpub" onclick="alert('✅ Offer published! 42 nearby students notified.')">🚀&nbsp; Publish Offer Now</button>
+        </div>
+      </div>
+
+      <!-- ======================== SCREEN 5: ORGANIZER ALERT ======================== -->
+      <div class="scr" id="scr5">
+        <div class="oh">
+          <div class="lch"><div class="ld"></div>LIVE ALERT</div>
+          <div class="oht">Leftover Alert 📣</div>
+          <div class="ohs">Post free food for nearby students instantly</div>
+        </div>
+        <div class="scrl">
+          <div style="padding:12px 12px 80px;">
+            <!-- Org Info -->
+            <div class="fs">
+              <span class="fl">Organization / Event</span>
+              <input class="fi" type="text" value="Gies- Career Workshop">
+              <span class="fl">Location</span>
+              <input class="fi" type="text" value="Graduate Success Lab (3029 BIF)" style="margin-bottom:0;">
+            </div>
+            <!-- Food Items -->
+            <div class="fs">
+              <span class="fl">Available Food Items</span>
+              <div class="fir"><span class="fii">🍕</span><span class="fin">Pizza – Cheese & Veggie</span><span class="fiq">2 boxes</span><div class="firm">✕</div></div>
+              <div class="fir"><span class="fii">🥤</span><span class="fin">Soda Cans (Assorted)</span><span class="fiq">18 cans</span><div class="firm">✕</div></div>
+              <div class="fir"><span class="fii">🍪</span><span class="fin">Cookies & Brownies</span><span class="fiq">1 tray</span><div class="firm">✕</div></div>
+              <button class="aib" onclick="alert('Add item dialog would open')">+ Add Food Item</button>
+            </div>
+            <!-- Timing -->
+            <div class="fs">
+              <span class="fl">Food Available Until *</span>
+              <div class="tr2">
+                <div>
+                  <div style="font-size:10.5px;color:var(--tm);font-weight:700;margin-bottom:4px;">END TIME</div>
+                  <input class="fi" type="time" value="16:30" style="margin-bottom:0;">
+                </div>
+                <div>
+                  <div style="font-size:10.5px;color:var(--tm);font-weight:700;margin-bottom:4px;">STATUS</div>
+                  <div style="padding:11px 10px;" class="stch stl">● DRAFTING</div>
+                </div>
+              </div>
+            </div>
+            <!-- Alert radius -->
+            <div class="fs">
+              <span class="fl">Alert Radius</span>
+              <div class="rtg">
+                <div class="rb" onclick="selectRadius(this)">0.5 mi</div>
+                <div class="rb act" onclick="selectRadius(this)">1 mile</div>
+                <div class="rb" onclick="selectRadius(this)">Campus</div>
+              </div>
+            </div>
+            <!-- Preview notification -->
+            <div style="margin-bottom:10px;">
+              <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;padding:0 2px;">Push Notification Preview</div>
+              <div class="pn">
+                <div class="pni">🍕</div>
+                <div class="pnt"><strong>Free Food Alert!</strong> Gies- Career Workshop has pizza, soda & cookies at Graduate Success Lab (3029 BIF). Ends at 4:30 PM — 0.4mi away. Grab it before it's gone!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="rbz" style="display:flex;flex-direction:column;gap:8px;">
+          <button class="bal" onclick="alert('📣 Alert sent! 87 nearby students notified within 1 mile.')">📣&nbsp; Send Alert to Nearby Students</button>
+          <button class="bcl" onclick="alert('Alert discarded.')">✕ Discard Alert</button>
+        </div>
+      </div>
+
+      <!-- ======================== SCREEN 6: ADMIN DASHBOARD ======================== -->
+      <div class="scr" id="scr6">
+        <div class="admh">
+          <div class="sb" style="background:transparent;padding-top:0;height:auto;margin-bottom:8px;"><span style="color:white;font-size:11px;opacity:.6;">ADMIN · Too Good To Go UIUC</span><span style="color:white;font-size:11px;opacity:.6;">9:41 AM</span></div>
+          <div class="admt">Admin Dashboard 📊</div>
+          <div class="adms">April 15, 2026 · Spring Semester · All Systems Normal ✓</div>
+        </div>
+        <div class="scrl">
+          <div style="padding:12px 12px 80px;">
+            <!-- Stats -->
+            <div class="sg">
+              <div class="sc grn">
+                <div class="sl"><span class="slico">👥</span>Active Students</div>
+                <div class="sv">1,284</div>
+                <div class="scg up">↑ +47 this week</div>
+              </div>
+              <div class="sc">
+                <div class="sl"><span class="slico">🏷</span>Offers Live</div>
+                <div class="sv">42</div>
+                <div class="scg up">↑ 18 new today</div>
+              </div>
+              <div class="sc orn">
+                <div class="sl"><span class="slico">✅</span>Pickups Today</div>
+                <div class="sv">127</div>
+                <div class="scg up">↑ 89% completion</div>
+              </div>
+              <div class="sc grn">
+                <div class="sl"><span class="slico">🌿</span>Waste Saved</div>
+                <div class="sv">34.2kg</div>
+                <div class="scg up">↑ this week</div>
+              </div>
+            </div>
+            <!-- Quick Actions -->
+            <div class="fs">
+              <span class="fl">Quick Actions</span>
+              <div class="qa">
+                <button class="qab" onclick="alert('Generating weekly report...')"><span class="qabi">📄</span>Generate Report</button>
+                <button class="qab" onclick="alert('Add vendor form would open')"><span class="qabi">🏪</span>Add Vendor</button>
+                <button class="qab" onclick="alert('Broadcast compose screen would open')"><span class="qabi">📢</span>Broadcast</button>
+                <button class="qab" onclick="alert('Campus rules configuration panel')"><span class="qabi">⚙️</span>Campus Rules</button>
+              </div>
+            </div>
+            <!-- Active Offers Table -->
+            <div class="fs" style="padding:0;overflow:hidden;">
+              <div style="padding:13px 13px 0;"><span class="fl" style="margin-bottom:0;">Active Offers (Top 5)</span></div>
+              <div class="th"><div>Vendor / Event</div><div>Qty</div><div>Status</div></div>
+              <div class="trow"><div><div class="trn">IMU Food Court</div><div class="trs">Veggie Wraps</div></div><div style="font-weight:700;">3/10</div><div><span class="stch stl" style="font-size:9px;padding:2px 7px;">● LIVE</span></div></div>
+              <div class="trow"><div><div class="trn">CS Colloquium</div><div class="trs">Pizza & Soda</div></div><div style="font-weight:700;">8/20</div><div><span class="stch stl" style="font-size:9px;padding:2px 7px;">● LIVE</span></div></div>
+              <div class="trow"><div><div class="trn">Espresso Royale</div><div class="trs">Pastries</div></div><div style="font-weight:700;">5/12</div><div><span class="stch stl" style="font-size:9px;padding:2px 7px;">● LIVE</span></div></div>
+              <div class="trow"><div><div class="trn">Undergrad Library</div><div class="trs">Sandwiches</div></div><div style="font-weight:700;">12/25</div><div><span class="stch stl" style="font-size:9px;padding:2px 7px;">● LIVE</span></div></div>
+              <div class="trow"><div><div class="trn">ISE Dept. Seminar</div><div class="trs">Sushi Boxes</div></div><div style="font-weight:700;">0/15</div><div><span class="stch stc" style="font-size:9px;padding:2px 7px;">✓ DONE</span></div></div>
+              <div style="padding:10px 13px;border-top:1px solid var(--bd);font-size:12px;color:var(--gm);font-weight:700;cursor:pointer;">View all 42 active offers →</div>
+            </div>
+            <!-- Flagged Issues -->
+            <div class="fs">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;">
+                <span class="fl" style="margin-bottom:0;">⚠️ Flagged Issues</span>
+                <span class="stch" style="background:#FFF5F5;color:var(--rd);font-size:9px;">2 OPEN</span>
+              </div>
+              <div class="fi2">
+                <span class="flic">🚩</span>
+                <div class="flc">
+                  <div class="flt">No-show report: Student #4821</div>
+                  <div class="fls">3 consecutive no-shows · Account at risk · 2 hrs ago</div>
+                </div>
+                <div class="fla">Review</div>
+              </div>
+              <div class="fi2">
+                <span class="flic">⚠️</span>
+                <div class="flc">
+                  <div class="flt">Expired offer not closed</div>
+                  <div class="fls">Grainger Café offer · 45 min overdue · Auto-closing...</div>
+                </div>
+                <div class="fla">Fix</div>
+              </div>
+            </div>
+            <!-- User Management -->
+            <div class="fs">
+              <span class="fl">User Management</span>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <div style="background:var(--bg);border-radius:10px;padding:11px;text-align:center;">
+                  <div style="font-size:18px;font-weight:800;color:var(--or);font-family:var(--fd);">1,284</div>
+                  <div style="font-size:10px;color:var(--tm);font-weight:700;">Students</div>
+                </div>
+                <div style="background:var(--bg);border-radius:10px;padding:11px;text-align:center;">
+                  <div style="font-size:18px;font-weight:800;color:var(--or);font-family:var(--fd);">38</div>
+                  <div style="font-size:10px;color:var(--tm);font-weight:700;">Vendors</div>
+                </div>
+                <div style="background:var(--bg);border-radius:10px;padding:11px;text-align:center;">
+                  <div style="font-size:18px;font-weight:800;color:var(--gm);font-family:var(--fd);">112</div>
+                  <div style="font-size:10px;color:var(--tm);font-weight:700;">Organizers</div>
+                </div>
+                <div style="background:var(--bg);border-radius:10px;padding:11px;text-align:center;">
+                  <div style="font-size:18px;font-weight:800;color:var(--rd);font-family:var(--fd);">3</div>
+                  <div style="font-size:10px;color:var(--tm);font-weight:700;">Flagged</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bn">
+          <div class="ni act"><div class="nico">📊</div>Dashboard</div>
+          <div class="ni"><div class="nico">👥</div>Users</div>
+          <div class="ni"><div class="nico">📄</div>Reports</div>
+          <div class="ni"><div class="nico">⚙️</div>Settings</div>
+        </div>
+      </div>
+
+    </div><!-- end phone-screen -->
+  </div><!-- end phone-frame -->
+
+  <!-- INFO PANEL -->
+  <div class="panel" id="infoPanel">
+    <!-- Populated by JS -->
+  </div>
+</div>
+
+<script>
+const panelData = {
+  1:{
+    role:'Student',
+    title:'Home / Discover Screen',
+    labels:[
+      ['🔔','Notification bell with unread dot – badge drives urgency'],
+      ['🔍','Search bar – full-text search across all active offers'],
+      ['☰ / 🗺','Map-list toggle – proximity-first discovery pattern'],
+      ['Chips','Dietary filter chips – sticky at top, one-tap to activate'],
+      ['Cards','Offer cards – food image, distance, timer, price badge, qty'],
+      ['⏱','Live countdown timer – refreshes every second per card'],
+      ['🟠 / �','Orange = discounted, Blue = free – instant visual scan'],
+      ['Bottom nav','Role-scoped navigation: Discover, Map, My Bag, Profile']
+    ],
+    notes:'This is the entry point for student users. Notice three key design principles working together: the map-list toggle implements proximity-first discovery, the filter chips let students find Vegan or Halal food instantly, and the orange countdown timers create the urgency needed to drive pickup behavior. Every card shows distance, price type, and remaining quantity at a glance — no clicks needed to decide.'
+  },
+  2:{
+    role:'Student',
+    title:'Offer Detail Screen',
+    labels:[
+      ['← Back','Navigation maintains spatial mental model'],
+      ['Progress bar','Visual quantity scarcity indicator – 7 of 10 claimed'],
+      ['⏱ Timer','Pickup window countdown – dynamic, updates in real-time'],
+      ['🗺 Map','Inline campus map preview – tap to open full map'],
+      ['🌱 Tags','Dietary tags – allergen and preference signaling'],
+      ['Accordion','Expandable pickup instructions – reduces visual noise'],
+      ['Reserve Btn','Sticky CTA at bottom – always visible while scrolling'],
+      ['Price','Clear upfront pricing before commitment']
+    ],
+    notes:'This screen is the trust-building layer. Students need confidence before committing: Who is the vendor? How many are left? Where exactly do I go? The quantity progress bar showing "7 of 10 claimed" triggers scarcity psychology. The collapsible pickup instructions keep the screen clean while the sticky Reserve button ensures the conversion action is always one tap away.'
+  },
+  3:{
+    role:'Student',
+    title:'Reservation Confirmation Screen',
+    labels:[
+      ['✅ Header','Success state – green gradient reinforces positive action'],
+      ['QR Code','Unique per-reservation code – scanned by vendor at pickup'],
+      ['Order ID','Traceable reservation ID – GG-YYYYMMDD-XXXX format'],
+      ['● ACTIVE','Status chip – real-time reservation state tracking'],
+      ['⏳ Countdown','Post-reservation urgency timer – closes at pickup end'],
+      ['Instructions','Numbered steps – reduces pickup friction to near zero'],
+      ['📅 Calendar','Add-to-calendar deeplink – reduces no-show rate'],
+      ['Cancel Link','Graceful cancellation – policy shown below button']
+    ],
+    notes:'This is the operational core of the system. The QR code contains an encrypted reservation token that the vendor scans to verify pickup. The countdown timer serves a dual purpose: it reminds students their food is waiting and motivates the vendor to stay attentive. The numbered instructions eliminate ambiguity at the physical pickup moment — students know exactly where to go and what to show.'
+  },
+  4:{
+    role:'Vendor',
+    title:'Create Offer Screen',
+    labels:[
+      ['Templates','One-tap templates pre-fill form for common offer types'],
+      ['Progress bar','Two-step flow indicator – reduces perceived complexity'],
+      ['Stepper','Quantity +/− stepper – faster and error-free vs. typing'],
+      ['Free toggle','Binary free/discounted toggle with price field reveal'],
+      ['Dietary chips','Multi-select dietary labels – no typing required'],
+      ['Time pickers','Start/end time pickers for pickup window definition'],
+      ['📷 Photo','Optional photo upload – increases student click rate ~40%'],
+      ['Publish Btn','Single CTA – fires push notifications to nearby students']
+    ],
+    notes:'The vendor screen is optimized for speed — a busy café owner needs to post surplus food in under 60 seconds. The Quick Templates feature is key: selecting "Bakery" pre-fills the item name, description, and category. The binary free/discounted price toggle with a conditional price field keeps the form minimal. Notice the two-step progress bar — breaking the form visually reduces perceived effort even if the total fields are the same.'
+  },
+  5:{
+    role:'Event Organizer',
+    title:'Leftover Alert Screen',
+    labels:[
+      ['● LIVE badge','LIVE chip communicates real-time urgency immediately'],
+      ['Food items','Tap-to-add food list with quantity – no long text needed'],
+      ['End time','Time picker for alert expiration – auto-closes post-event'],
+      ['Alert radius','0.5mi / 1mi / Campus radius toggle – targets right crowd'],
+      ['Preview card','Push notification preview – what students will actually see'],
+      ['Send Alert','One-tap broadcast to all students within selected radius'],
+      ['Status chip','DRAFTING → ACTIVE → COMPLETED lifecycle tracking'],
+      ['Close button','Graceful early closure if food runs out ahead of schedule']
+    ],
+    notes:'Event organizers are not tech-savvy users — this screen must be extremely fast to use during the chaos of a post-event cleanup. The pre-filled organization name, the food-item chip system, and the one-tap publish button minimize effort. The notification preview is crucial: organizers can verify the message tone before sending it to potentially hundreds of students. The alert radius toggle ensures relevance — no one wants to walk 2 miles for leftover pizza.'
+  },
+  6:{
+    role:'System Admin',
+    title:'Admin Dashboard Screen',
+    labels:[
+      ['KPI cards','4 headline metrics: users, offers, pickups, waste saved'],
+      ['🌿 34.2kg','Sustainability KPI – waste prevented in kg, not just pickups'],
+      ['Quick Actions','4-button grid: Report, Vendor, Broadcast, Campus Rules'],
+      ['Offers table','Live offer status table with real-time qty and status'],
+      ['⚠️ Flags','Proactive issue surfacing – no-shows and expired offers'],
+      ['User grid','Role-segmented user count: Students / Vendors / Orgs / Flagged'],
+      ['Bottom nav','Admin-scoped nav: Dashboard, Users, Reports, Settings'],
+      ['Status chips','Color-coded LIVE / DONE status pills across all tables']
+    ],
+    notes:'The admin dashboard surfaces the most important insight first: sustainability impact. Showing "34.2kg waste prevented" alongside pickup counts frames this as a mission-driven platform, not just a marketplace. The flagged issues panel appears proactively — admins do not need to hunt for problems. The quick-action grid covers the four most common admin tasks. Role-segmented user counts (1,284 students, 38 vendors, 112 organizers) help the admin understand platform health at a glance.'
+  }
+};
+
+let currentScreen = 1;
+const timers = {};
+
+function switchScreen(n, tab){
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('act'));
+  document.getElementById('scr'+n).classList.add('act');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('act'));
+  if(tab) tab.classList.add('act');
+  currentScreen = n;
+  updatePanel(n);
+}
+
+function updatePanel(n){
+  const d = panelData[n];
+  const panel = document.getElementById('infoPanel');
+  let labelsHtml = d.labels.map(l=>`<div class="pit"><div class="pid"></div><div><span class="ltag">${l[0]}</span> ${l[1]}</div></div>`).join('');
+  panel.innerHTML = `
+    <div class="pcard">
+      <div class="pct">Screen ${n} · ${d.role}</div>
+      <div style="font-family:var(--fd);font-size:16px;font-weight:800;color:white;margin-bottom:12px;">${d.title}</div>
+      <div class="pct" style="margin-top:8px;margin-bottom:8px;">UI Element Labels</div>
+      ${labelsHtml}
+    </div>`;
+}
+
+// View toggle
+function toggleView(v){
+  const lv = document.getElementById('listView');
+  const mv = document.getElementById('mapView');
+  const lb = document.getElementById('listBtn');
+  const mb = document.getElementById('mapBtn');
+  if(v==='list'){lv.style.display='block';mv.style.display='none';lb.classList.add('act');mb.classList.remove('act');}
+  else{lv.style.display='none';mv.style.display='block';mb.classList.add('act');lb.classList.remove('act');}
+}
+
+function toggleChip(el){
+  const parent = el.parentElement;
+  parent.querySelectorAll('.ch').forEach(c=>c.classList.remove('act'));
+  el.classList.add('act');
+}
+
+// Accordion
+function toggleAcc(el){
+  const body = document.getElementById('accBody');
+  const arrow = document.getElementById('accArrow');
+  body.classList.toggle('open');
+  arrow.textContent = body.classList.contains('open') ? '▲' : '▼';
+}
+
+// Vendor form
+function changeQty(d){
+  const el = document.getElementById('qtyVal');
+  let v = parseInt(el.textContent)+d;
+  if(v<1)v=1; if(v>99)v=99;
+  el.textContent=v;
+}
+
+function setPriceMode(m){
+  const fb = document.getElementById('freeBtn');
+  const pb = document.getElementById('paidBtn');
+  const pf = document.getElementById('priceField');
+  fb.className='ptgb '+(m==='free'?'act free':'free');
+  pb.className='ptgb '+(m==='paid'?'act paid':'paid');
+  pf.style.display=m==='paid'?'block':'none';
+}
+
+function toggleDiet(el){el.classList.toggle('act');}
+
+function selectTemplate(el, name, desc){
+  document.querySelectorAll('.tc').forEach(t=>t.classList.remove('sel'));
+  el.classList.add('sel');
+  const ni = document.getElementById('itemName');
+  if(ni) ni.value = name;
+}
+
+function selectRadius(el){
+  document.querySelectorAll('.rb').forEach(r=>r.classList.remove('act'));
+  el.classList.add('act');
+}
+
+// Countdown timers
+function parseTime(str){
+  const p=str.split(':').map(Number);
+  return p.length===3?p[0]*3600+p[1]*60+p[2]:p[0]*60+p[1];
+}
+function fmtTime(s){
+  if(s<=0)return'CLOSED';
+  const h=Math.floor(s/3600);
+  const m=Math.floor((s%3600)/60);
+  const sec=s%60;
+  if(h>0)return`${h}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+  return`${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+
+let times = {c1:parseTime('23:47'),c2:parseTime('45:12'),c3:parseTime('1:02:30'),c4:parseTime('31:00'),det:parseTime('38:22'),conf:parseTime('38:22')};
+
+setInterval(()=>{
+  Object.keys(times).forEach(k=>{
+    if(times[k]>0)times[k]--;
+    const els=document.querySelectorAll('.'+k);
+    els.forEach(el=>{if(el)el.textContent=fmtTime(times[k]);});
+  });
+  const dt=document.getElementById('det-timer');
+  if(dt)dt.textContent=fmtTime(times.det);
+  const ct=document.getElementById('conf-timer');
+  if(ct)ct.textContent=fmtTime(times.conf);
+},1000);
+
+// Init
+updatePanel(1);
+</script>
+</body>
+</html>
